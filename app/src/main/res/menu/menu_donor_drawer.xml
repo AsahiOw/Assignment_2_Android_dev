@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- menu_donor_drawer.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_donation_history"
+            android:icon="@drawable/ic_history"
+            android:title="@string/menu_donation_history" />
+        <item
+            android:id="@+id/nav_upcoming_donations"
+            android:icon="@drawable/ic_calendar"
+            android:title="@string/menu_upcoming_donations" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/menu_settings" />
+    </group>
+
+    <item android:title="@string/menu_account">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+</menu>

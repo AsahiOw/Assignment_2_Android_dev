@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_map">
+
+    <!-- Main Navigation -->
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="Android_dev.assignment_2.View.Fragment.MapFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_map" />
+
+    <fragment
+        android:id="@+id/nav_donations"
+        android:name="Android_dev.assignment_2.View.Fragment.DonationsFragment"
+        android:label="@string/menu_donations"
+        tools:layout="@layout/fragment_donations" />
+
+    <fragment
+        android:id="@+id/nav_notifications"
+        android:name="Android_dev.assignment_2.View.Fragment.NotificationsFragment"
+        android:label="@string/menu_notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="Android_dev.assignment_2.View.Fragment.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <!-- Donor Navigation -->
+    <fragment
+        android:id="@+id/nav_donation_history"
+        android:name="Android_dev.assignment_2.View.Fragment.DonationHistoryFragment"
+        android:label="@string/menu_donation_history"
+        tools:layout="@layout/fragment_donation_history" />
+
+    <fragment
+        android:id="@+id/nav_upcoming_donations"
+        android:name="Android_dev.assignment_2.View.Fragment.UpcomingDonationsFragment"
+        android:label="@string/menu_upcoming_donations"
+        tools:layout="@layout/fragment_upcoming_donations" />
+
+    <!-- Site Manager Navigation -->
+    <fragment
+        android:id="@+id/nav_manage_site"
+        android:name="Android_dev.assignment_2.View.Fragment.ManageSiteFragment"
+        android:label="@string/menu_manage_site"
+        tools:layout="@layout/fragment_manage_site" />
+
+    <fragment
+        android:id="@+id/nav_manage_events"
+        android:name="Android_dev.assignment_2.View.Fragment.ManageEventsFragment"
+        android:label="@string/menu_manage_events"
+        tools:layout="@layout/fragment_manage_events" />
+
+    <fragment
+        android:id="@+id/nav_registered_donors"
+        android:name="Android_dev.assignment_2.View.Fragment.RegisteredDonorsFragment"
+        android:label="@string/menu_registered_donors"
+        tools:layout="@layout/fragment_registered_donors" />
+
+    <fragment
+        android:id="@+id/nav_site_statistics"
+        android:name="Android_dev.assignment_2.View.Fragment.SiteStatisticsFragment"
+        android:label="@string/menu_site_statistics"
+        tools:layout="@layout/fragment_site_statistics" />
+
+    <!-- Admin Navigation -->
+    <fragment
+        android:id="@+id/nav_manage_sites"
+        android:name="Android_dev.assignment_2.View.Fragment.ManageSitesFragment"
+        android:label="@string/menu_manage_sites"
+        tools:layout="@layout/fragment_manage_sites" />
+
+    <fragment
+        android:id="@+id/nav_manage_users"
+        android:name="Android_dev.assignment_2.View.Fragment.ManageUsersFragment"
+        android:label="@string/menu_manage_users"
+        tools:layout="@layout/fragment_manage_users" />
+
+    <fragment
+        android:id="@+id/nav_system_reports"
+        android:name="Android_dev.assignment_2.View.Fragment.SystemReportsFragment"
+        android:label="@string/menu_system_reports"
+        tools:layout="@layout/fragment_system_reports" />
+
+    <fragment
+        android:id="@+id/nav_analytics"
+        android:name="Android_dev.assignment_2.View.Fragment.AnalyticsFragment"
+        android:label="@string/menu_analytics"
+        tools:layout="@layout/fragment_analytics" />
+
+    <!-- Settings Navigation -->
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="Android_dev.assignment_2.View.Fragment.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_system_settings"
+        android:name="Android_dev.assignment_2.View.Fragment.SystemSettingsFragment"
+        android:label="@string/menu_system_settings"
+        tools:layout="@layout/fragment_system_settings" />
+</navigation>

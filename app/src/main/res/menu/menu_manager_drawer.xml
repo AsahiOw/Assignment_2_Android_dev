@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- menu_manager_drawer.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_manage_site"
+            android:icon="@drawable/ic_manage_sites"
+            android:title="@string/menu_manage_site" />
+
+        <item
+            android:id="@+id/nav_manage_events"
+            android:icon="@drawable/ic_calendar"
+            android:title="@string/menu_manage_events" />
+
+        <item
+            android:id="@+id/nav_registered_donors"
+            android:icon="@drawable/ic_people"
+            android:title="@string/menu_registered_donors" />
+
+        <item
+            android:id="@+id/nav_donation_history"
+            android:icon="@drawable/ic_history"
+            android:title="@string/menu_donation_history" />
+
+        <item
+            android:id="@+id/nav_site_statistics"
+            android:icon="@drawable/ic_analytics"
+            android:title="@string/menu_site_statistics" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/menu_settings" />
+    </group>
+
+    <item android:title="@string/menu_account">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+</menu>
