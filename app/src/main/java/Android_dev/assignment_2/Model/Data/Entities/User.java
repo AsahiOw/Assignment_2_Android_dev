@@ -3,6 +3,11 @@ package Android_dev.assignment_2.Model.Data.Entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +20,15 @@ public class User implements Parcelable {
     private String password;
     private String fullName;
     private String phoneNumber;
-    private BloodType bloodType;
+    private String bloodTypeStr; // Store as string in Firestore
+    @Exclude
+    private BloodType bloodType; // Exclude from Firestore
     private UserRole role;
     private List<String> managedSiteIds;
     private List<DonationRegistration> donationHistory;
 
+    // Default constructor required for Firestore
     public User() {
-        // Required empty constructor for Firestore
         managedSiteIds = new ArrayList<>();
         donationHistory = new ArrayList<>();
     }
@@ -34,55 +41,13 @@ public class User implements Parcelable {
         this.password = password;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
-        this.bloodType = bloodType;
+        setBloodType(bloodType);
         this.role = role;
-        this.managedSiteIds = managedSiteIds;
-        this.donationHistory = donationHistory;
+        this.managedSiteIds = managedSiteIds != null ? managedSiteIds : new ArrayList<>();
+        this.donationHistory = donationHistory != null ? donationHistory : new ArrayList<>();
     }
 
-    protected User(Parcel in) {
-        id = in.readString();
-        email = in.readString();
-        password = in.readString();
-        fullName = in.readString();
-        phoneNumber = in.readString();
-        bloodType = BloodType.valueOf(in.readString());
-        role = UserRole.valueOf(in.readString());
-        managedSiteIds = new ArrayList<>();
-        in.readStringList(managedSiteIds);
-        donationHistory = new ArrayList<>();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(email);
-        dest.writeString(password);
-        dest.writeString(fullName);
-        dest.writeString(phoneNumber);
-        dest.writeString(bloodType.name());
-        dest.writeString(role.name());
-        dest.writeStringList(managedSiteIds);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    // Getters and Setters remain the same
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -123,12 +88,42 @@ public class User implements Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
+    @Exclude
     public BloodType getBloodType() {
+        if (bloodType == null && bloodTypeStr != null) {
+            try {
+                bloodType = BloodType.fromString(bloodTypeStr);
+            } catch (IllegalArgumentException e) {
+                bloodType = null;
+            }
+        }
         return bloodType;
     }
 
+    @Exclude
     public void setBloodType(BloodType bloodType) {
         this.bloodType = bloodType;
+        this.bloodTypeStr = bloodType != null ? bloodType.getDisplayName() : null;
+    }
+
+    // Methods for Firestore serialization
+    @PropertyName("bloodType")
+    public String getBloodTypeStr() {
+        return bloodTypeStr;
+    }
+
+    @PropertyName("bloodType")
+    public void setBloodTypeStr(String bloodTypeStr) {
+        this.bloodTypeStr = bloodTypeStr;
+        if (bloodTypeStr != null) {
+            try {
+                this.bloodType = BloodType.fromString(bloodTypeStr);
+            } catch (IllegalArgumentException e) {
+                this.bloodType = null;
+            }
+        } else {
+            this.bloodType = null;
+        }
     }
 
     public UserRole getRole() {
@@ -144,7 +139,7 @@ public class User implements Parcelable {
     }
 
     public void setManagedSiteIds(List<String> managedSiteIds) {
-        this.managedSiteIds = managedSiteIds;
+        this.managedSiteIds = managedSiteIds != null ? managedSiteIds : new ArrayList<>();
     }
 
     public List<DonationRegistration> getDonationHistory() {
@@ -152,8 +147,62 @@ public class User implements Parcelable {
     }
 
     public void setDonationHistory(List<DonationRegistration> donationHistory) {
-        this.donationHistory = donationHistory;
+        this.donationHistory = donationHistory != null ? donationHistory : new ArrayList<>();
     }
+
+    // Parcelable implementation
+    protected User(Parcel in) {
+        id = in.readString();
+        email = in.readString();
+        password = in.readString();
+        fullName = in.readString();
+        phoneNumber = in.readString();
+        bloodTypeStr = in.readString();
+        if (bloodTypeStr != null) {
+            try {
+                bloodType = BloodType.fromString(bloodTypeStr);
+            } catch (IllegalArgumentException e) {
+                bloodType = null;
+            }
+        }
+        try {
+            role = UserRole.valueOf(in.readString());
+        } catch (IllegalArgumentException e) {
+            role = UserRole.DONOR; // Default to DONOR if invalid
+        }
+        managedSiteIds = new ArrayList<>();
+        in.readStringList(managedSiteIds);
+        donationHistory = new ArrayList<>();
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(fullName);
+        dest.writeString(phoneNumber);
+        dest.writeString(bloodTypeStr);
+        dest.writeString(role != null ? role.name() : UserRole.DONOR.name());
+        dest.writeStringList(managedSiteIds);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     @Override
     public String toString() {

@@ -93,7 +93,7 @@ public class ManageUsersFragment extends Fragment {
 
         firestore.collection("users")
                 .orderBy("role", Query.Direction.ASCENDING)
-                .orderBy("fullName", Query.Direction.ASCENDING)
+                .orderBy("name", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     users.clear();

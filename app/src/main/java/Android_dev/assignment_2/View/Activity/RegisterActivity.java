@@ -110,22 +110,13 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Send verification email
-                        firebaseAuth.getCurrentUser().sendEmailVerification()
-                                .addOnCompleteListener(emailTask -> {
-                                    if (emailTask.isSuccessful()) {
-                                        // Save additional user data to Firestore
-                                        saveUserDataToFirestore(
-                                                task.getResult().getUser().getUid(),
-                                                name,
-                                                email,
-                                                phone,
-                                                bloodType
-                                        );
-                                    } else {
-                                        handleError("Failed to send verification email", emailTask.getException());
-                                    }
-                                });
+                        saveUserDataToFirestore(
+                                task.getResult().getUser().getUid(),
+                                name,
+                                email,
+                                phone,
+                                bloodType
+                        );
                     } else {
                         handleError("Registration failed", task.getException());
                     }
@@ -247,10 +238,9 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(RegisterActivity.this,
-                            "Registration successful. Please verify your email.",
+                            "Registration successful! Welcome to Blood Donation App",
                             Toast.LENGTH_LONG).show();
-                    firebaseAuth.signOut();
-                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e -> {

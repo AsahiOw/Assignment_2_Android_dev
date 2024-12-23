@@ -18,13 +18,8 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import Android_dev.assignment_2.Model.Data.Entities.DonationRegistration;
-import Android_dev.assignment_2.Model.Data.Entities.User;
 import Android_dev.assignment_2.R;
 import Android_dev.assignment_2.View.Adapter.DonationHistoryAdapter;
 
@@ -81,7 +76,6 @@ public class ProfileFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::loadUserProfile);
 
         editProfileButton.setOnClickListener(v -> {
-            // Launch edit profile dialog
             EditProfileDialogFragment dialog = new EditProfileDialogFragment();
             dialog.show(getChildFragmentManager(), "EditProfileDialog");
         });
@@ -94,14 +88,27 @@ public class ProfileFragment extends Fragment {
                 .document(currentUser.getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    User user = documentSnapshot.toObject(User.class);
-                    if (user != null) {
-                        updateUI(user);
+                    if (documentSnapshot.exists()) {
+                        // Match the exact field names from Firestore
+                        String name = documentSnapshot.getString("name");
+                        String email = currentUser.getEmail();
+                        String phone = documentSnapshot.getString("phone");
+                        String bloodType = documentSnapshot.getString("bloodType");
+                        String role = documentSnapshot.getString("role");
+
+                        // Update UI with null checks
+                        if (name != null) nameTextView.setText(name);
+                        if (email != null) emailTextView.setText(email);
+                        if (phone != null) phoneTextView.setText(phone);
+                        if (bloodType != null) bloodTypeTextView.setText(bloodType);
+
                         loadDonationHistory();
                     }
+                    swipeRefreshLayout.setRefreshing(false);
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error loading profile: " + e.getMessage(),
+                    Toast.makeText(getContext(),
+                            "Error loading profile: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                 });
@@ -112,38 +119,20 @@ public class ProfileFragment extends Fragment {
                 .whereEqualTo("userId", currentUser.getUid())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<DonationRegistration> donationHistory = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        DonationRegistration registration = document.toObject(DonationRegistration.class);
-                        donationHistory.add(registration);
-                    }
-                    updateDonationHistory(donationHistory);
-                    swipeRefreshLayout.setRefreshing(false);
+                    int totalDonations = queryDocumentSnapshots.size();
+                    totalDonationsTextView.setText(String.valueOf(totalDonations));
+                    statsCardView.setVisibility(totalDonations > 0 ? View.VISIBLE : View.GONE);
+
+                    DonationHistoryAdapter adapter = new DonationHistoryAdapter(
+                            queryDocumentSnapshots.toObjects(DonationRegistration.class)
+                    );
+                    donationHistoryRecyclerView.setAdapter(adapter);
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error loading donation history: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayout.setRefreshing(false);
-                });
-    }
-
-    private void updateUI(User user) {
-        nameTextView.setText(user.getFullName());
-        emailTextView.setText(user.getEmail());
-        phoneTextView.setText(user.getPhoneNumber());
-        bloodTypeTextView.setText(user.getBloodType().getDisplayName());
-    }
-
-    private void updateDonationHistory(List<DonationRegistration> donationHistory) {
-        totalDonationsTextView.setText(String.valueOf(donationHistory.size()));
-
-        // You could add more statistics here
-        statsCardView.setVisibility(donationHistory.isEmpty() ? View.GONE : View.VISIBLE);
-
-        // Update RecyclerView
-        // Note: You'll need to create DonationHistoryAdapter
-        DonationHistoryAdapter adapter = new DonationHistoryAdapter(donationHistory);
-        donationHistoryRecyclerView.setAdapter(adapter);
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(),
+                                "Error loading donation history: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                );
     }
 
     @Override

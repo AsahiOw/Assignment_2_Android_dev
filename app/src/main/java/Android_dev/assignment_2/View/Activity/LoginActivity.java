@@ -77,17 +77,14 @@ public class LoginActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
+                        if (user != null) {
                             // Login successful, redirect to MainActivity
                             Toast.makeText(LoginActivity.this, "Login successful",
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this,
-                                    "Please verify your email first",
-                                    Toast.LENGTH_LONG).show();
                         }
+
                     } else {
                         // If login fails, display a message to the user
                         Toast.makeText(LoginActivity.this,

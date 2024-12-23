@@ -77,7 +77,6 @@
     <string name="menu_manage_users">Manage Users</string>
     <string name="menu_system_reports">System Reports</string>
     <string name="menu_analytics">Analytics</string>
-    <string name="menu_system_settings">System Settings</string>
 
     <!-- Map related strings -->
     <string name="filter_map">Filter Map</string>
@@ -109,4 +108,10 @@
     <string name="donation_statistics">Donation Statistics</string>
     <string name="total_donations">Total Donations</string>
     <string name="donation_history">Donation History</string>
+
+    <!-- Profile Edit Dialog -->
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>
