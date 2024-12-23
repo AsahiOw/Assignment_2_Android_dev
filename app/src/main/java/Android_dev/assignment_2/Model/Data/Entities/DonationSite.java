@@ -1,15 +1,19 @@
 package Android_dev.assignment_2.Model.Data.Entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DonationSite {
+public class DonationSite implements Parcelable {
     private String id;
     private String name;
     private String address;
-    private LatLng location;  // Google Maps LatLng object
+    private LatLng location;
     private String managerId;
     private List<String> requiredBloodTypes;
     private List<DonationEvent> events;
@@ -19,9 +23,16 @@ public class DonationSite {
     private Date createdAt;
     private Date updatedAt;
 
-    // Constructors, getters, setters
+    public DonationSite() {
+        // Required empty constructor for Firestore
+        requiredBloodTypes = new ArrayList<>();
+        events = new ArrayList<>();
+    }
 
-    public DonationSite(String id, String name, String address, LatLng location, String managerId, List<String> requiredBloodTypes, List<DonationEvent> events, String contactPhone, String description, boolean isActive, Date createdAt, Date updatedAt) {
+    public DonationSite(String id, String name, String address, LatLng location, String managerId,
+                        List<String> requiredBloodTypes, List<DonationEvent> events,
+                        String contactPhone, String description, boolean isActive,
+                        Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -36,6 +47,56 @@ public class DonationSite {
         this.updatedAt = updatedAt;
     }
 
+    protected DonationSite(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        address = in.readString();
+        location = new LatLng(in.readDouble(), in.readDouble());
+        managerId = in.readString();
+        requiredBloodTypes = new ArrayList<>();
+        in.readStringList(requiredBloodTypes);
+        events = new ArrayList<>(); // Events are not parceled
+        contactPhone = in.readString();
+        description = in.readString();
+        isActive = in.readByte() != 0;
+        createdAt = new Date(in.readLong());
+        updatedAt = new Date(in.readLong());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeDouble(location.latitude);
+        dest.writeDouble(location.longitude);
+        dest.writeString(managerId);
+        dest.writeStringList(requiredBloodTypes);
+        dest.writeString(contactPhone);
+        dest.writeString(description);
+        dest.writeByte((byte) (isActive ? 1 : 0));
+        dest.writeLong(createdAt.getTime());
+        dest.writeLong(updatedAt.getTime());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DonationSite> CREATOR = new Creator<DonationSite>() {
+        @Override
+        public DonationSite createFromParcel(Parcel in) {
+            return new DonationSite(in);
+        }
+
+        @Override
+        public DonationSite[] newArray(int size) {
+            return new DonationSite[size];
+        }
+    };
+
+    // Getters and Setters remain the same
     public String getId() {
         return id;
     }

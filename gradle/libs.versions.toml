@@ -17,6 +17,7 @@ activity = "1.9.3"
 firebaseFirestore = "25.1.1"
 playServicesMaps = "19.0.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -41,6 +42,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

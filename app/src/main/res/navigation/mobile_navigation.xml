@@ -48,7 +48,7 @@
         android:id="@+id/nav_manage_site"
         android:name="Android_dev.assignment_2.View.Fragment.ManageSiteFragment"
         android:label="@string/menu_manage_site"
-        tools:layout="@layout/fragment_manage_site" />
+        tools:layout="@layout/fragment_manage_sites" />
 
     <fragment
         android:id="@+id/nav_manage_events"

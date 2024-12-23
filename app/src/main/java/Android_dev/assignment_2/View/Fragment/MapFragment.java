@@ -62,21 +62,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        Log.d("MapDebug", "Map is ready");
 
-        // Add default settings
+        // Enable zoom controls
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setZoomGesturesEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-
-        // Set default location (e.g., RMIT University Vietnam)
-        LatLng rmit = new LatLng(10.729567, 106.694207);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rmit, 15f));
-
-        // Test marker to verify map is working
-        mMap.addMarker(new MarkerOptions()
-                .position(rmit)
-                .title("RMIT University Vietnam"));
 
         // Check location permissions
         if (ContextCompat.checkSelfPermission(requireContext(),
@@ -85,26 +73,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             requestLocationPermission();
         }
-    }
 
-    private void loadDonationSites() {
-        Log.d("MapDebug", "Loading donation sites");
-        firestore.collection("donationSites")
-                .whereEqualTo("isActive", true)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("MapDebug", "Successfully got " + queryDocumentSnapshots.size() + " sites");
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        DonationSite site = document.toObject(DonationSite.class);
-                        addSiteMarker(site);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("MapDebug", "Error loading donation sites: " + e.getMessage());
-                    Toast.makeText(requireContext(),
-                            "Error loading donation sites: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                });
+        // Load donation sites
+        loadDonationSites();
+
+        // Set up map click listener for debugging (optional)
+        mMap.setOnMapClickListener(latLng -> {
+            Toast.makeText(requireContext(),
+                    "Lat: " + latLng.latitude + " Long: " + latLng.longitude,
+                    Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void enableMyLocation() {
@@ -154,21 +132,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-//    private void loadDonationSites() {
-//        firestore.collection("donationSites")
-//                .whereEqualTo("isActive", true)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                        DonationSite site = document.toObject(DonationSite.class);
-//                        addSiteMarker(site);
-//                    }
-//                })
-//                .addOnFailureListener(e ->
-//                        Toast.makeText(requireContext(),
-//                                "Error loading donation sites: " + e.getMessage(),
-//                                Toast.LENGTH_SHORT).show());
-//    }
+    private void loadDonationSites() {
+        firestore.collection("donationSites")
+                .whereEqualTo("isActive", true)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        DonationSite site = document.toObject(DonationSite.class);
+                        addSiteMarker(site);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(requireContext(),
+                                "Error loading donation sites: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
+    }
 
     private void addSiteMarker(DonationSite site) {
         LatLng location = site.getLocation();
